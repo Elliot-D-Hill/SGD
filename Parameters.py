@@ -16,7 +16,8 @@ class Parameters:
                  max_epoch = 1, 
                  max_iterations = 1000, 
                  decay = 1, 
-                 decay_schedule = 50):
+                 decay_schedule = 50,
+                 balanced = False):
         
         self.grad_method = grad_method
         self.learning_rate = learning_rate
@@ -26,4 +27,5 @@ class Parameters:
         self.max_iterations = max_iterations
         self.decay = decay
         self.decay_schedule = decay_schedule
+        self.balanced = balanced
         

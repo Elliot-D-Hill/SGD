@@ -14,22 +14,22 @@ class CostFunction:
         self.method = method
         self.grad_method = grad_method
 
-    def sigmoid(self, yHat): # for logistic regression
-        return 1 / (1 + np.exp(-yHat))
+    def sigmoid(self, y_hat): # for logistic regression
+        return 1 / (1 + np.exp(-y_hat))
     
     # define model
     def model(self, X, theta):
+        y_hat = np.dot(X, theta)
         if self.method == 'LS': # least squares
-            yHat = np.dot(X, theta)
+             None # do nothing       
         if self.method == 'LR': # logistic regression
-            yHat = np.dot(X, theta)
-            yHat = self.sigmoid(yHat)
-        return yHat
+            y_hat = self.sigmoid(y_hat)
+        return y_hat
     
     # calculate the residual
     def residual(self, X, theta, y):
         y_hat = self.model(X, theta)
-        R =  y - y_hat
+        R =  y_hat - y
         return R
     
     # calculate the Jacobian
@@ -38,11 +38,12 @@ class CostFunction:
         if self.method == 'LS': # least squares
             R = self.residual(X, theta, y)
             J = (1 / n) * LA.norm(R) # R^T * R
+            
         if self.method == 'LR': # logistic regression
-            yHat = self.model(X, theta)
+            y_hat = self.model(X, theta)
             epsilon = 1e-5
-            J = (1 / n) * (((-y).T @ np.log(yHat + epsilon))
-                       -((1 - y).T @ np.log(1 - yHat + epsilon)))
+            J = (1 / n) * (((-y).T @ np.log(y_hat + epsilon))
+                       -((1 - y).T @ np.log(1 - y_hat + epsilon)))
             J = J[0]
         return J
     
@@ -51,11 +52,8 @@ class CostFunction:
         
         # analytcal gradient of normal equations w.r.t. theta 
         if self.grad_method == 'exact': 
-            yHat = self.model(X, theta)
-            if self.method == 'LS':
-                grad = np.dot(X.transpose(), (yHat - y)) 
-            elif self.method == 'LR':
-                grad = X.T @ (yHat - y)
+            R = self.residual(X, theta, y)
+            grad = np.dot(X.transpose(), R) 
             
         # finite difference approximation of gradient
         elif self.grad_method == 'fdm': 

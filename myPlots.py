@@ -8,8 +8,12 @@ Created on Thu May  7 21:19:04 2020
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np 
+from statsmodels.distributions.empirical_distribution import ECDF
 
-def plot_data(cost_function, numPoints, data, intercept):
+font = {'size' : 14}
+plt.rc('font', **font)
+
+def plot_data(cost_function, numPoints, data):
     
     if cost_function.method == 'LS':
         plt.scatter(data[:numPoints, 1], data[:numPoints, 2], marker = '.') 
@@ -18,7 +22,7 @@ def plot_data(cost_function, numPoints, data, intercept):
         sns.set_style('white')
         sns.scatterplot(data[:,1], data[:,2], hue=data[:,3]);
 
-def plot_model_fit(cost_function, X_test, y_test, y_pred,  theta, intercept):
+def plot_model_fit(cost_function, X_test, y_test, y_pred,  theta):
     
     if cost_function.method == 'LS':
         plt.scatter(X_test[:, 1], y_test[:, ], marker = '.') 
@@ -50,7 +54,22 @@ def plot_cost(cost_function, error_list):
         plt.figure()
         sns.set_style('white')
         plt.plot(range(len(error_list)), error_list, 'r')
-        plt.title("Convergence Graph of Cost Function")
         plt.xlabel("Number of Iterations")
         plt.ylabel("Cost")
         plt.show()
+
+def plot_ecdf(data, p_features):
+    
+    def ecdf(data):
+        x = np.sort(data)
+        x = np.log(x/p_features)
+        x = x/p_features
+        n = x.size
+        y = np.arange(1, n+1) / n
+        return(x,y)
+    
+    x, y = ecdf(data)
+    plt.figure()
+    plt.plot(x, y)
+    plt.xlabel("log(sample evaluations / dimension)")
+    plt.ylabel("Fraction of target values reached")
