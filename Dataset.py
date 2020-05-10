@@ -11,14 +11,14 @@ from sklearn.datasets import make_classification
 from sklearn import datasets
 from sklearn import preprocessing
 
-def create_dataset(cost_function, m_samples, p_features, preproc):
+def create_dataset(cost_function, m_samples, p_features, preproc, balance):
     
     if cost_function.method == 'LS': # regression
 
         X, y = datasets.make_regression(n_samples=m_samples, 
                                         n_features=p_features,
                                         n_informative=1, 
-                                        noise=10,
+                                        noise=40,
                                         random_state=np.random.randint(low=0,
                                                                    high=100,
                                                                    size=1)[0])
@@ -34,6 +34,7 @@ def create_dataset(cost_function, m_samples, p_features, preproc):
                                  n_features=p_features,
                                  n_redundant=0, 
                                  n_informative=1,
+                                 weights=[1-balance, balance],
                                  n_clusters_per_class=1,
                                  random_state=np.random.randint(low=0,
                                                                 high=100,

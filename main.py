@@ -6,7 +6,7 @@ Created on Thu Apr 16 10:41:48 2020
 @author: Elliot
 """
 # importing dependencies 
-import numpy as np 
+import numpy as np
 import SGD as sgd
 import CostFunction as cf
 import Parameters as pm
@@ -14,6 +14,7 @@ import Minibatch as mb
 import myPlots as mp
 import Dataset as ds
 import Benchmark as bm
+import matplotlib.pyplot as plt
 
 ############# gradient descent parameters #############
 parms = pm.Parameters(learning_rate = 0.001,
@@ -45,7 +46,9 @@ if cost_function.method == 'LR':
 elif cost_function.method == 'LS':
     p_features = 1
 
-data = ds.create_dataset(cost_function, sample_size, p_features, preproc = True)
+preproc = True
+balance = 0.5
+data = ds.create_dataset(cost_function, sample_size, p_features, preproc, balance)
 
 ############# Split data into train and test sets #############
 
@@ -96,14 +99,15 @@ y_pred, err = benchmarker.test_error(cost_function, X_test, y_test, theta, verbo
 
 # plot data
 numPoints = 500
+plt.figure()
 mp.plot_data(cost_function, numPoints, data)
 
+plt.figure()
 # plot gradient descent error
 mp.plot_cost(cost_function, error_list)
 
+plt.figure()
 # plot of model fit
 mp.plot_model_fit(cost_function, X_test, y_test, y_pred, theta)
-
-mp.plot_ecdf(benchmarker.benchmark(), p_features)
 
 

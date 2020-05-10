@@ -62,7 +62,7 @@ class Minibatch:
             idx_start = idx_end
         
         # number of samples per subinterval
-        subinterval_size = self.batch_size // self.num_subintervals 
+        subinterval_size = self.batch_size // self.num_subintervals
         num_batches =  mRow // self.batch_size # number of mini-batches
         temp_mini_batches = np.empty(num_batches, dtype=object)
         mini_batches = []
