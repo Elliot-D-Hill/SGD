@@ -1,2 +1,12 @@
 # SGD
-Improving the convergence rate of stochastic gradient descent (SGD) on machine learning applications.
+Improving stochastic gradient descent (SGD) through experimental benchmarking.
+
+# Current experiments:
+
+Class-balanced mini-batch schemes for classification problems with severe class imbalance.
+
+# Future experiments
+
+Momentum variations (coming soon).
+
+LDS initialization (coming soon).
