@@ -9,18 +9,29 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-font = {'size' : 14}
-plt.rc('font', **font)
 
-def plot_data(cost_function, numPoints, data):
+def plot_data(cost_function, num_points, mini_batch_size, data):
     
     if cost_function.method == 'LS':
-        plt.scatter(data[:numPoints, 1], data[:numPoints, 2], marker = '.')
-        y = np.around(np.arange(start=-3, stop=4, step=1), decimals=1)
-        plt.hlines(y, -3.3, 3.3, linestyles='dashed')
-        plt.xlabel("x") 
+        
+        x1 = data[:num_points, 1]
+        y1 = data[:num_points, 2]
+        
+        plt.scatter(x1, y1, marker = '.')
+        idx = np.random.choice(data.shape[0], mini_batch_size, replace=False)
+
+        mini_batch = data[idx,:]
+        
+        plt.scatter(mini_batch[:mini_batch_size, 1], 
+                    mini_batch[:mini_batch_size, 2], 
+                    marker = '.',
+                    color = 'red')
+                
         plt.ylabel("y")
-        plt.show() 
+        plt.xlabel("x") 
+
+        # plt.show() 
+        
     elif cost_function.method == 'LR':
         sns.set_style('white')
         sns.scatterplot(data[:,1], data[:,2], hue=data[:,3]);
@@ -84,7 +95,7 @@ def plot_ecdf(data1, data2, num_row_plots, num_col_plots, exp_var):
             x2, y2 = ecdf(d2)
             axs[i, j].plot(x1, y1, 'b', label='Balanced')
             axs[i, j].plot(x2, y2, 'orange', label='Unbalanced')
-            axs[i, j].set_title('# of subintervals: ' + str(exp_var[count]), fontsize = 12)
+            axs[i, j].set_title('Class imbalance: ' + str(exp_var[count]), fontsize = 12)
 
             count += 1
     
@@ -93,8 +104,23 @@ def plot_ecdf(data1, data2, num_row_plots, num_col_plots, exp_var):
         if i >= 3:
             ax.set_xlabel('log(sample evaluations)', fontsize = 12)
         if i == 0 or i == 3:
-            ax.set_ylabel('Fraction targets reached', fontsize = 12)
+            ax.set_ylabel('Fraction of targets reached', fontsize = 12)
         
     plt.tight_layout()
     plt.show()
+    
+def plot_single_ecdf(data):
+    
+    color_palette = sns.color_palette("OrRd", 12)
+    
+    for i, col in enumerate(data.columns):
+        d = data[col]            
+        x, y = ecdf(d)
+        plt.plot(x, y, label=col, color=color_palette[11-i*2])
+    
+    plt.legend(title="Class imbalance")
+    plt.xlabel('log(sample evaluations)', fontsize = 16)
+    plt.ylabel('Fraction of targets reached', fontsize = 16)
+    
+    
     
